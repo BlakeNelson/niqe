@@ -21,7 +21,7 @@ function  [mu_prisparam cov_prisparam]  = estimatemodelparam(folderpath,...
 % Find the names of images in the folder
 current = pwd;
 cd(sprintf('%s',folderpath))
-names        = ls;
+names        = ls('*.jp2');
 names        = names(3:end,:);
 cd(current)
 % ---------------------------------------------------------------
