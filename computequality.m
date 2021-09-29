@@ -52,7 +52,7 @@ for itr_scale = 1:scalenum
   sigma = sqrt(abs(imfilter(im.*im,window,'replicate') - mu_sq));
   structdis = (im-mu)./(sigma+1);
 
-  feat_scale = iblockproc(structdis,[blocksizerow/itr_scale blocksizecol/itr_scale], ...
+  feat_scale = blkproc(structdis,[blocksizerow/itr_scale blocksizecol/itr_scale], ...
                [blockrowoverlap/itr_scale blockcoloverlap/itr_scale], ...
                @computefeature);
   feat_scale = reshape(feat_scale,[featnum ....
@@ -60,7 +60,7 @@ for itr_scale = 1:scalenum
   feat_scale = feat_scale';
 
   if(itr_scale == 1)
-    sharpness = iblockproc(sigma,[blocksizerow blocksizecol], ...
+    sharpness = blkproc(sigma,[blocksizerow blocksizecol], ...
                  [blockrowoverlap blockcoloverlap],@computemean);
     sharpness = sharpness(:);
   end
@@ -71,9 +71,8 @@ end
 
 % Fit a MVG model to distorted patch features
 distparam = feat;
-nancount = sum(isnan(distparam(:)))
-mu_distparam = mean(distparam);
-cov_distparam = cov(distparam);
+mu_distparam = nanmean(distparam);
+cov_distparam = nancov(distparam);
 
 % Compute quality
 invcov_param = pinv((cov_prisparam+cov_distparam)/2);

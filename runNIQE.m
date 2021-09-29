@@ -1,11 +1,12 @@
-function r = runNIQE(path, colBorder, rowBorder)
-  files = ls(strcat(path,'/','*.jp2'))
+function r = runNIQE(imagePath, modelPath, colBorder, rowBorder)
+  files = ls(strcat(imagePath,'/','*.jp2'))
 
   %blocksizerow = 96;
   %blocksizecol = 96;
   %blockrowoverlap = 0;
   %blockcoloverlap = 0;
-  load modelparameters.mat cov_prisparam mu_prisparam blocksizerow blocksizecol blockrowoverlap blockcoloverlap;
+  load(modelPath,'cov_prisparam', 'mu_prisparam', 'blocksizerow', 'blocksizecol', 'blockrowoverlap', 'blockcoloverlap');
+  %load modelparameters.mat cov_prisparam mu_prisparam blocksizerow blocksizecol blockrowoverlap blockcoloverlap;
   %load 'E:\Users\bnelson1\IQT\data\ir_spot_jp2\model1.mat' cov_prisparam mu_prisparam;
   [fileCount, ~] = size(files);
 
@@ -13,7 +14,7 @@ function r = runNIQE(path, colBorder, rowBorder)
   inputs = strings(1,1);
   outIdx = 1;
   for fileIdx = 1:fileCount
-    filePath = strcat(path,'/',files(fileIdx,:))
+    filePath = strcat(imagePath,'/',files(fileIdx,:))
       
       I = imread(filePath);
       [irows, icols] = size(I);
@@ -31,5 +32,5 @@ function r = runNIQE(path, colBorder, rowBorder)
   end
   
   t = table(inputs, scores);
-  writetable(t, strcat(path, '/scores.csv'));
+  writetable(t, strcat(imagePath, '/scores.csv'));
 
